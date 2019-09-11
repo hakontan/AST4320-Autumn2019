@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import astropy.constants as c
 from astropy.cosmology import WMAP9 as cosmo
 
-N = 1000
+N = 10000
 H0 = cosmo.H0
 
 a0 = 1e-3
@@ -21,7 +21,7 @@ def D_delta(deltadot, adot):
 def Hubble(a, Om, Ol):
     return(H0.value * np.sqrt(Om*a**(-3) + Ol))
 
-def integrate(Om, Ol):
+def solver(Om, Ol, plot=False):
     delta = np.zeros(N)
     deltadot = np.zeros(N)
 
@@ -38,12 +38,36 @@ def integrate(Om, Ol):
 
         delta[i+1]    = (delta[i] + da * D_delta(deltadot[i+1],
                                                  a[i] * H))
-    plt.loglog(a, delta, label = r"$\Omega _m$ = {0}, $\Omega _m$ = {1}"
-                                   .format(Om, Ol))
-    
-integrate(1, 0)
-integrate(0.3, 0.7)
-integrate(0.8, 0.2)
+    if plot==True:
+        plt.loglog(a, delta, label = r"$\Omega _m$ = {0}, $\Omega _m$ = {1}"
+                                        .format(Om, Ol))
+        plt.xlabel("log(a)"); plt.ylabel(r"log($\delta$)")
 
+    return(delta, deltadot)
+
+def growth_factor(Om, Ol):
+        z = 1/a - 1
+        delta, deltadot = solver(Om, Ol)
+        f = np.power(Hubble(a, Om, Ol), -1) * (deltadot/delta)
+        plt.loglog(z, f, label = r"$\Omega _m$ = {0}, $\Omega _m$ = {1}"
+                                    .format(Om, Ol))
+        plt.xlabel("log(z)")
+        plt.ylabel(r"log($F=\frac{dln\delta}{dlna}$)")
+        
+
+
+solver(1, 0, plot=True)
+solver(0.3, 0.7, plot=True)
+solver(0.8, 0.2, plot=True)
 plt.legend()
+plt.title("Overdensity")
+plt.savefig("exercise2dot2.eps")
+plt.show()
+
+growth_factor(1, 0)
+growth_factor(0.3, 0.7)
+growth_factor(0.8, 0.2)
+plt.legend()
+plt.title("Growth factor")
+plt.savefig("exercise2dot3.eps")
 plt.show()
