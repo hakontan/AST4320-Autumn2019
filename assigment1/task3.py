@@ -4,16 +4,20 @@ import astropy.constants as const
 import astropy.units as unit
 
 
-
-
 T_CMB = 2.725*unit.K
 a = np.linspace(1e-4, 1, 1000)
 z = 1/a - 1
 
 def T_rad(a):
+    """
+    Returns the temperature for a radiation dominated universe.
+    """
     return(T_CMB * np.power(a, -1))
 
 def T_gas(a):
+    """
+    Returns the temperature for a matter dominated universe.
+    """
     return(T_CMB/1091 * np.power(a, -2))
 
 plt.loglog(a, T_rad(a), label="T_rad")
