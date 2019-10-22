@@ -7,7 +7,7 @@ import astropy.constants as const
 
 c        = const.c.cgs            # speed of light in cgs
 H0       = cosmo.H(0).cgs         # Hubble constant in cgs
-Sigma_T  = 6.65e-25 * u.cm**2     # cm^2
+Sigma_T  = 6.65e-25 * u.cm**2     # Thomson cross section of molecule [cm^2]
 O_m      = 0.308                  # energy density parameter for mass 
 O_lambda = 0.692                  # energy density parameter for lambda
 
@@ -18,7 +18,7 @@ def tau_e(z):
     as a function of redshift z.
 
     Parameters:
-    --------
+    -----------
     z: redshift at which the optical depth is to be calculated
     """
     _z = np.linspace(0, z, 100) # New redshift array to define limits in the integral
@@ -38,4 +38,5 @@ fig, ax = plt.subplots()
 ax.plot(z, tau)
 ax.set_xlabel("Redshift (z)")
 ax.set_ylabel(r"$\tau_{e}(z)$")
+fig.savefig("exercise2.pdf")
 plt.show()
